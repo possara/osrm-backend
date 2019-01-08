@@ -339,8 +339,33 @@ class RouteAPI : public BaseAPI
                         datasource_names.values.push_back(std::string(facade.GetDatasourceName(i)));
                     }
                     metadata.values["datasource_names"] = datasource_names;
+                    metadata.values["salut"] = "salut";
                     annotation.values["metadata"] = metadata;
                 }
+
+                if (requested_annotations & RouteParameters::AnnotationsType::Datasources)
+                {
+                    const auto MAX_DATASOURCE_ID = 255u;
+                    util::json::Object metadata;
+                    util::json::Array datasource_names;
+                    for (auto i = 0u; i < MAX_DATASOURCE_ID; i++)
+                    {
+                        const auto name = facade.GetDatasourceName(i);
+                        // Length of 0 indicates the first empty name, so we can stop here
+                        if (name.size() == 0)
+                            break;
+                        datasource_names.values.push_back(std::string(facade.GetDatasourceName(i)));
+                    }
+                    metadata.values["datasource_names"] = datasource_names;
+                    metadata.values["salut"] = "salut";
+                    annotation.values["metadata"] = metadata;
+                }
+
+            if (requested_annotations & RouteParameters::AnnotationsType::Sara)
+                {
+                    annotation.values["sara"] = "ok";
+                }
+
 
                 annotations.push_back(std::move(annotation));
             }
