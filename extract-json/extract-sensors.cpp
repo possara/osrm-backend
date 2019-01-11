@@ -96,39 +96,26 @@ int main(int argc, char** argv){
 
     localhost = argv[2];
 
-    json j;
-    input >> j;
+    json j_input;
+    input >> j_input;
 
-    std::map<std::string, PhantomNodes> sensors_list;
+    std::ofstream output("sensors_list.json", std::ofstream::out);
+    json j_output = json::array();
 
-    auto features = j["features"];
-    size_t size = j["features"].size();
+    auto features = j_input["features"];
+    size_t size = j_input["features"].size();
 
     for (int i = 0; i < size; i++){
       // std::cout << features[i]["properties"]["Text"] << " à la coordonnée " << features[i]["geometry"]["coordinates"][0] << "," << features[i]["geometry"]["coordinates"][1] << "\n";
       // std::cout << "curl 'http://router.project-osrm.org/nearest/v1/driving/" << features[i]["geometry"]["coordinates"][0] << "," << features[i]["geometry"]["coordinates"][1] << "?number=3&bearings=0,20' \n";
       PhantomNodes node = curl_call(features[i]["geometry"]["coordinates"][0].get<double>(), features[i]["geometry"]["coordinates"][1].get<double>());
       std::string name = features[i]["properties"]["Text"].get<std::string>();
-      sensors_list[name] = node;
 
-      // std::cout << node.getSource() << "," << node.getTarget() << " -> " << sensors_list[node] << "\n\n\n";
-    }
-
-    std::cout << "Size : " << sensors_list.size() << "\n";
-
-    std::ofstream output("sensors_list.json", std::ofstream::out);
-
-    json j_output = json::array();
-
-    for(std::map<std::string, PhantomNodes>::iterator it=sensors_list.begin() ; it!=sensors_list.end() ; ++it)
-    {
-        json nodes = json::array({(it->second.getSource()) , (it->second.getTarget())});
-        // std::cout << it->second.getSource() << "," << it->second.getTarget() << " -> " << it->first << "\n";
-        j_output.push_back( { {"nodes", nodes}, {"name", (it->first) }} );
+      json nodes = json::array({(node.getSource()) , (node.getTarget())});
+      j_output.push_back( { {"nodes", nodes}, {"name", name }} );
     }
 
     output << std::setw(4) << j_output;
-
 
     // std::ifstream i("response-route.json");
     // json j;
@@ -153,7 +140,5 @@ int main(int argc, char** argv){
     // }
     //
     // std::cout << std::setw(4) << j << '\n';
-
-
 
 }
