@@ -111,3 +111,7 @@ debug.lua
 
 # node-osrm artifacts
 lib/binding
+
+#gertrude
+/extract-json/curl-7-.63.0
+/gertrude_data/
