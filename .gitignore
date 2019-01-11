@@ -113,5 +113,5 @@ debug.lua
 lib/binding
 
 #gertrude
-/extract-json/curl-7-.63.0
-/gertrude_data/
+extract-json/curl-7-.63.0
+gertrude_data/

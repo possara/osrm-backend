@@ -7,9 +7,9 @@
 
 using json = nlohmann::json;
 
-int main(){
+int main(int argc, char** argv){
 	// read a JSON file
-	std::ifstream iRoute("response.json");
+	std::ifstream iRoute(argv[1]);
 	json jRoute;
 	iRoute >> jRoute;
 
