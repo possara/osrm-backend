@@ -52,7 +52,7 @@ size_t writeCallback(char* buf, size_t size, size_t nmemb, void* up)
 
 PhantomNodes curl_call(double lon, double lat){
 
-    std::string url = localhost + "/nearest/v1/driving/" + std::to_string(lon) + "," + std::to_string(lat) + "?number=1&bearings=0,20";
+    std::string url = localhost + "/nearest/v1/driving/" + std::to_string(lon) + "," + std::to_string(lat) + "?number=1";
     // std::cout << url << "\n";
 
     CURL* curl; //our curl object
