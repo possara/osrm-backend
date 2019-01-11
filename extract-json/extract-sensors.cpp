@@ -9,12 +9,15 @@
 using json = nlohmann::json;
 
 std::string data; //will hold the url's contents
+std::string localhost;
 
 class PhantomNodes{
   private:
     unsigned int source;
     unsigned int target;
   public:
+    PhantomNodes(){
+    }
     PhantomNodes(int source, int target){
       this->source = source;
       this->target = target;
@@ -49,7 +52,7 @@ size_t writeCallback(char* buf, size_t size, size_t nmemb, void* up)
 
 PhantomNodes curl_call(double lon, double lat){
 
-    std::string url = "http://router.project-osrm.org/nearest/v1/driving/" + std::to_string(lon) + "," + std::to_string(lat) + "?number=1&bearings=0,20";
+    std::string url = localhost + "/nearest/v1/driving/" + std::to_string(lon) + "," + std::to_string(lat) + "?number=1&bearings=0,20";
     // std::cout << url << "\n";
 
     CURL* curl; //our curl object
@@ -90,10 +93,13 @@ PhantomNodes curl_call(double lon, double lat){
 int main(int argc, char** argv){
     // read a JSON file
     std::ifstream input(argv[1]);
+
+    localhost = argv[2];
+
     json j;
     input >> j;
 
-    std::map<PhantomNodes, std::string> sensors_list;
+    std::map<std::string, PhantomNodes> sensors_list;
 
     auto features = j["features"];
     size_t size = j["features"].size();
@@ -102,7 +108,8 @@ int main(int argc, char** argv){
       // std::cout << features[i]["properties"]["Text"] << " à la coordonnée " << features[i]["geometry"]["coordinates"][0] << "," << features[i]["geometry"]["coordinates"][1] << "\n";
       // std::cout << "curl 'http://router.project-osrm.org/nearest/v1/driving/" << features[i]["geometry"]["coordinates"][0] << "," << features[i]["geometry"]["coordinates"][1] << "?number=3&bearings=0,20' \n";
       PhantomNodes node = curl_call(features[i]["geometry"]["coordinates"][0].get<double>(), features[i]["geometry"]["coordinates"][1].get<double>());
-      sensors_list[node] = features[i]["properties"]["Text"];
+      std::string name = features[i]["properties"]["Text"].get<std::string>();
+      sensors_list[name] = node;
 
       // std::cout << node.getSource() << "," << node.getTarget() << " -> " << sensors_list[node] << "\n\n\n";
     }
@@ -113,14 +120,14 @@ int main(int argc, char** argv){
 
     json j_output = json::array();
 
-    for(std::map<PhantomNodes, std::string>::iterator it=sensors_list.begin() ; it!=sensors_list.end() ; ++it)
+    for(std::map<std::string, PhantomNodes>::iterator it=sensors_list.begin() ; it!=sensors_list.end() ; ++it)
     {
-        json nodes = json::array({(it->first.getSource()) , (it->first.getTarget())});
-        std::cout << it->first.getSource() << "," << it->first.getTarget() << " -> " << it->second << "\n";
-        j_output.push_back( { {"nodes", nodes}, {"name", (it->second) }} );
+        json nodes = json::array({(it->second.getSource()) , (it->second.getTarget())});
+        // std::cout << it->second.getSource() << "," << it->second.getTarget() << " -> " << it->first << "\n";
+        j_output.push_back( { {"nodes", nodes}, {"name", (it->first) }} );
     }
 
-    output << j_output;
+    output << std::setw(4) << j_output;
 
 
     // std::ifstream i("response-route.json");
