@@ -9,11 +9,17 @@ using json = nlohmann::json;
 
 int main(){
 	// read a JSON file
-	std::ifstream i("response.json");
-	json j;
-	i >> j;
+	std::ifstream iRoute("response.json");
+	json jRoute;
+	iRoute >> jRoute;
 
-	auto legs = j["routes"][0]["legs"];
+	std::ifstream iSensor("sensors_list.json");
+	json jSensor;
+	iSensor >> jSensor;
+
+	auto legs = jRoute["routes"][0]["legs"];
+
+	auto nodesSensor = jSensor;
 
 	for (int i = 0; i < legs.size(); i++){
 		auto nodes = legs[i]["annotation"]["nodes"];
@@ -21,7 +27,26 @@ int main(){
 		int k = (i == 0) ? 0 : 2;
 
 		for(; k < nodes.size()-1; k++){
-			std::cout << "PhantomNodes " << nodes[k] << "-" << nodes[k+1] << "\n";
+			// std::cout << "PhantomNodes " << nodes[k] << "-" << nodes[k+1] << "\n";
+
+			for (int j = 0; j < nodesSensor.size(); j++){
+
+				//std::cout << "Capteurs" << nodesSensor[j]["nodes"][0] << " - " << nodesSensor[j]["nodes"][1] << " - " <<  nodes[k] << " - "<<  nodes[k+1] << "\n";
+
+				if ((nodesSensor[j]["nodes"][0] == 0 && nodesSensor[j]["nodes"][1] == nodes[k]) ||
+					(nodesSensor[j]["nodes"][0] == nodes[k] && nodesSensor[j]["nodes"][1] == 0) ||
+				 ( nodesSensor[j]["nodes"][0] == nodes[k] && nodesSensor[j]["nodes"][1] == nodes[k+1])){
+
+					std::cout << "Capteurs" << nodesSensor[j]["name"] << "\n";
+				} else if (k == nodes.size()-2) {
+					if ((nodesSensor[j]["nodes"][0] == nodes[k+1] && nodesSensor[j]["nodes"][1] == 0) ||
+						(nodesSensor[j]["nodes"][1] == nodes[k+1] && nodesSensor[j]["nodes"][0] == 0)) {
+						std::cout << "Capteurs" << nodesSensor[j]["name"] << "\n";
+					}
+				}
+
+			}
+
 			// node exists in file 1
 			// insert in list
 		}
