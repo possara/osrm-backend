@@ -33,16 +33,9 @@ int main(int argc, char** argv){
 
 				//std::cout << "Capteurs" << nodesSensor[j]["nodes"][0] << " - " << nodesSensor[j]["nodes"][1] << " - " <<  nodes[k] << " - "<<  nodes[k+1] << "\n";
 
-				if ((nodesSensor[j]["nodes"][0] == 0 && nodesSensor[j]["nodes"][1] == nodes[k]) ||
-					(nodesSensor[j]["nodes"][0] == nodes[k] && nodesSensor[j]["nodes"][1] == 0) ||
-				 ( nodesSensor[j]["nodes"][0] == nodes[k] && nodesSensor[j]["nodes"][1] == nodes[k+1])){
+				if (( nodesSensor[j]["nodes"][0] == nodes[k] && nodesSensor[j]["nodes"][1] == nodes[k+1])){
 
 					std::cout << "Capteurs" << nodesSensor[j]["name"] << "\n";
-				} else if (k == nodes.size()-2) {
-					if ((nodesSensor[j]["nodes"][0] == nodes[k+1] && nodesSensor[j]["nodes"][1] == 0) ||
-						(nodesSensor[j]["nodes"][1] == nodes[k+1] && nodesSensor[j]["nodes"][0] == 0)) {
-						std::cout << "Capteurs" << nodesSensor[j]["name"] << "\n";
-					}
 				}
 
 			}

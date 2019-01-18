@@ -7,29 +7,30 @@
 
 using json = nlohmann::json;
 
-int main(int argc, char** argv){
+int main(){
 	// read a JSON file
-	std::ifstream iBus(argv[1]);
+	std::ifstream iBus("bus.json");
 	json jBus;
 	iBus >> jBus;
 
 	auto stops = jBus["features"][0]["geometry"]["coordinates"];
 
-	std::cout << "http://localhost:5000/route/v1/driving/";
+	std::cout << "http://localhost:9966/?z=13&center=51.045819%2C2.338200&loc=";
 	int nbCurrentLine = 0;
-	int i = 0;
-		for (int j = 0; j < stops[i].size(); j++) {
-			if (nbCurrentLine >= 499) {
-				std::cout << ";" << stops[i][j][0] << "," << stops[i][j][1];
+	for (int i = 0; i < stops.size(); i++){
+		for (int j = 1; j < stops[i].size()-1; j+=25) {
+			if (nbCurrentLine >= 5000) {
+				std::cout << "&loc=" << stops[i][j][1] << "%2C" << stops[i][j][0];
 				std::cout << "?overview=full&steps=true&annotations=true\n\n\n";
 				std::cout << "http://localhost:5000/route/v1/driving/";
 				nbCurrentLine = 0;
 			}
 			if (nbCurrentLine > 0) {
-				std::cout << ";";
+				std::cout << "&loc=";
 			}
-			std::cout << stops[i][j][0] << "," << stops[i][j][1];
+			std::cout << stops[i][j][1] << "%2C" << stops[i][j][0];
 			nbCurrentLine++;
 		}
-	std::cout << "?overview=full&steps=true&annotations=true\n";
+	}
+	std::cout << "&hl=en&alt=0\n";
 }
