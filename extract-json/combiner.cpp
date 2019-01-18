@@ -59,7 +59,6 @@ int main(int argc, char** argv){
 			combine_single_response(jRoute[i], nodesSensor);
 		}
 	} else {
-
 		combine_single_response(jRoute, nodesSensor);
 	}
 
