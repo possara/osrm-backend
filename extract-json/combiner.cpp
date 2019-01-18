@@ -7,6 +7,14 @@
 
 using json = nlohmann::json;
 
+void special_nodes_check(json nodes_sensor, json node) {
+
+	if ((nodes_sensor["nodes"][0] == 0 &&  nodes_sensor["nodes"][1] == node)) {
+
+		std::cout << "Capteurs" << nodes_sensor["name"] << "\n";
+	}
+}
+
 void combine_single_response(json single_response, json nodesSensor ) {
 
 	auto legs = single_response["routes"][0]["legs"];
@@ -27,6 +35,8 @@ void combine_single_response(json single_response, json nodesSensor ) {
 
 					std::cout << "Capteurs" << nodesSensor[j]["name"] << "\n";
 				}
+
+				special_nodes_check(nodesSensor[j], nodes[k+1]);
 
 			}
 
@@ -63,5 +73,5 @@ int main(int argc, char** argv){
 	}
 
 
-	// return list
+	// return list*/
 }
