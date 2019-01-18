@@ -7,19 +7,9 @@
 
 using json = nlohmann::json;
 
-int main(int argc, char** argv){
-	// read a JSON file
-	std::ifstream iRoute(argv[1]);
-	json jRoute;
-	iRoute >> jRoute;
+void combine_single_response(json single_response, json nodesSensor ) {
 
-	std::ifstream iSensor("sensors_list.json");
-	json jSensor;
-	iSensor >> jSensor;
-
-	auto legs = jRoute["routes"][0]["legs"];
-
-	auto nodesSensor = jSensor;
+	auto legs = single_response["routes"][0]["legs"];
 
 	for (int i = 0; i < legs.size(); i++){
 		auto nodes = legs[i]["annotation"]["nodes"];
@@ -44,6 +34,35 @@ int main(int argc, char** argv){
 			// insert in list
 		}
 	}
+}
+
+
+int main(int argc, char** argv){
+
+	if(argc != 3){
+      std::cout << "Usage: " << argv[0] << " route-response.json sensors-list.json\n";
+      exit(0);
+    }
+	// read a JSON file
+	std::ifstream iRoute(argv[1]);
+	json jRoute;
+	iRoute >> jRoute;
+
+	std::ifstream iSensor(argv[2]);
+	json jSensor;
+	iSensor >> jSensor;
+
+	auto nodesSensor = jSensor;
+
+	if (jRoute.is_array()) {
+		for (size_t i = 0; i < jRoute.size(); ++i ){
+			combine_single_response(jRoute[i], nodesSensor);
+		}
+	} else {
+
+		combine_single_response(jRoute, nodesSensor);
+	}
+
 
 	// return list
 }
