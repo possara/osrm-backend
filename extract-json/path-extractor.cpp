@@ -28,8 +28,10 @@ int main(int argc, char** argv){
 	auto stops = jBus["features"][0]["geometry"]["coordinates"];
 
 	int nbCurrentLine = 0;
+
 	std::string url = hostname + "/route/v1/driving/";
 	for (int i = 0; i < stops.size(); i++){
+
 		for (int j = 0; j < stops[i].size(); j++) {
 			double lon = stops[i][j][0].get<double>();
 			double lat = stops[i][j][1].get<double>();
@@ -50,6 +52,7 @@ int main(int argc, char** argv){
 			url += std::to_string(lon) + "," + std::to_string(lat);
 			nbCurrentLine++;
 		}
+
 	}
 	url += "?overview=full&steps=true&annotations=true";
 
