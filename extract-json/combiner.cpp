@@ -3,11 +3,12 @@
 #include <fstream>
 #include <iomanip>
 #include <string>
-#include "curl/curl.h"
 
 using json = nlohmann::json;
 
-void combine_single_response(json single_response, json nodesSensor ) {
+json features = json::array();
+
+void combine_single_response(json single_response, json nodesSensor) {
 
 	auto legs = single_response["routes"][0]["legs"];
 
@@ -21,11 +22,24 @@ void combine_single_response(json single_response, json nodesSensor ) {
 
 			for (int j = 0; j < nodesSensor.size(); j++){
 
-				//std::cout << "Capteurs" << nodesSensor[j]["nodes"][0] << " - " << nodesSensor[j]["nodes"][1] << " - " <<  nodes[k] << " - "<<  nodes[k+1] << "\n";
+				// std::cout << "Capteurs" << nodesSensor[j]["nodes"][0] << " - " << nodesSensor[j]["nodes"][1] << " - " <<  nodes[k] << " - "<<  nodes[k+1] << "\n";
 
 				if (( nodesSensor[j]["nodes"][0] == nodes[k] && nodesSensor[j]["nodes"][1] == nodes[k+1])){
-
 					std::cout << "Capteurs" << nodesSensor[j]["name"] << "\n";
+					json coordinates = nodesSensor[j]["coordinates"];
+					features.push_back({
+						      {"type", "Feature"},
+						      {"properties", {
+						        {"marker-color", "#ff0000"},
+						        {"marker-size", "large"},
+						        {"marker-symbol", "bus"},
+										{"Text", nodesSensor[j]["name"]}
+						      }},
+						      {"geometry", {
+						        {"type", "Point"},
+						        {"coordinates", coordinates}
+						      }}
+						    });
 				}
 
 			}
@@ -62,6 +76,9 @@ int main(int argc, char** argv){
 		combine_single_response(jRoute, nodesSensor);
 	}
 
+	json geojson_output = { {"type", "FeatureCollection"}, {"features", features} };
+	std::ofstream output("bus-sensors.geojson", std::ofstream::out);
+	output << std::setw(4) << geojson_output;
 
 	// return list
 }

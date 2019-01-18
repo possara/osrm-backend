@@ -87,7 +87,5 @@ int main(int argc, char** argv){
       json coordinates = json::array({lon, lat});
       j_output.push_back( { {"nodes", nodes}, {"name", name }, {"coordinates", coordinates} } );
     }
-
     output << std::setw(4) << j_output;
-
 }
