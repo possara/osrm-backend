@@ -68,7 +68,7 @@ int main(int argc, char** argv){
     json j_input;
     input >> j_input;
 
-    std::ofstream output("sensors_list.json", std::ofstream::out);
+    std::ofstream output("sensors-list.json", std::ofstream::out);
     json j_output = json::array();
 
     auto features = j_input["features"];
@@ -84,9 +84,8 @@ int main(int argc, char** argv){
       std::string name = features[i]["properties"]["Text"].get<std::string>();
 
       json nodes = json::array({(node.getSource()) , (node.getTarget())});
-      j_output.push_back( { {"nodes", nodes}, {"name", name }} );
+      json coordinates = json::array({lon, lat});
+      j_output.push_back( { {"nodes", nodes}, {"name", name }, {"coordinates", coordinates} } );
     }
-
     output << std::setw(4) << j_output;
-
 }
