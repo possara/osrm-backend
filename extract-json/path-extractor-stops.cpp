@@ -9,8 +9,8 @@ using json = nlohmann::json;
 std::string hostname;
 
 int main(int argc, char** argv){
-	if(argc != 3){
-		std::cout << "Usage: " << argv[0] << " input-file.json hostname\n";
+	if(argc != 4){
+		std::cout << "Usage: " << argv[0] << " input-file.json hostname output.json\n";
 		exit(0);
 	}
 
@@ -23,7 +23,7 @@ int main(int argc, char** argv){
 	iBus >> jBus;
 	json j_output = json::array();
 
-	std::ofstream output("response-bus.json", std::ofstream::out);
+	std::ofstream output(argv[3], std::ofstream::out);
 
 	auto way_bus = jBus["features"][0]["geometry"]["coordinates"][0];
 	auto features = jBus["features"];

@@ -62,8 +62,8 @@ void combine_single_response(json single_response, json nodesSensor) {
 
 int main(int argc, char** argv){
 
-	if(argc != 3){
-      std::cout << "Usage: " << argv[0] << " route-response.json sensors-list.json\n";
+	if(argc != 4){
+      std::cout << "Usage: " << argv[0] << " route-response.json sensors-list.json output.geojson\n";
       exit(0);
     }
 	// read a JSON file
@@ -86,7 +86,7 @@ int main(int argc, char** argv){
 	}
 
 	json geojson_output = { {"type", "FeatureCollection"}, {"features", features} };
-	std::ofstream output("bus-sensors.geojson", std::ofstream::out);
+	std::ofstream output(argv[3], std::ofstream::out);
 	output << std::setw(4) << geojson_output;
 
 	// return list*/

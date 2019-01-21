@@ -55,8 +55,8 @@ PhantomNodes osrm_nearest_request(double lon, double lat){
 }
 
 int main(int argc, char** argv){
-    if(argc != 3){
-      std::cout << "Usage: " << argv[0] << " input-file.geojson hostname\n";
+    if(argc != 4){
+      std::cout << "Usage: " << argv[0] << " input-file.geojson hostname output.json\n";
       exit(0);
     }
 
@@ -68,7 +68,7 @@ int main(int argc, char** argv){
     json j_input;
     input >> j_input;
 
-    std::ofstream output("sensors-list.json", std::ofstream::out);
+    std::ofstream output(argv[3], std::ofstream::out);
     json j_output = json::array();
 
     auto features = j_input["features"];

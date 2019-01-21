@@ -11,8 +11,8 @@ std::string hostname;
 
 
 int main(int argc, char** argv){
-	if(argc != 3){
-		std::cout << "Usage: " << argv[0] << " input-file.json hostname\n";
+	if(argc != 4){
+		std::cout << "Usage: " << argv[0] << " input-file.json hostname output.json\n";
 		exit(0);
 	}
 
@@ -61,6 +61,6 @@ int main(int argc, char** argv){
 
 	j_output.push_back(j);
 
-	std::ofstream output("bus-response.json", std::ofstream::out);
+	std::ofstream output(argv[3], std::ofstream::out);
 	output << std::setw(4) << j_output;
 }

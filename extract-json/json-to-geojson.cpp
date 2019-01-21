@@ -25,7 +25,7 @@ void convert_single_response(json j_input) {
 int main(int argc, char** argv){
 
   if(argc != 3){
-    std::cout << "Usage: " << argv[0] << " route-response.json json-to-geojson.geojson\n";
+    std::cout << "Usage: " << argv[0] << " route-response.json output.geojson\n";
     exit(0);
   }
       // read a JSON file
