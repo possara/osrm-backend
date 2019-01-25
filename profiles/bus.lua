@@ -1,6 +1,6 @@
 -- Car profile
 
-api_version = 5
+api_version = 4
 
 Set = require('lib/set')
 Sequence = require('lib/sequence')
@@ -10,7 +10,6 @@ find_access_tag = require("lib/access").find_access_tag
 limit = require("lib/maxspeed").limit
 Utils = require("lib/utils")
 Measure = require("lib/measure")
-
 
 function setup()
   return {
@@ -34,7 +33,7 @@ function setup()
     default_speed             = 10,
     oneway_handling           = true,
     side_road_multiplier      = 0.8,
-    turn_penalty              = 7,
+    turn_penalty              = 7.5,
     speed_reduction           = 0.8,
     turn_bias                 = 1.075,
     cardinal_directions       = false,
@@ -72,9 +71,9 @@ function setup()
       'vehicle',
       'permissive',
       'designated',
-      --    'hov'
-      'psv', --added
-      'bus' --added
+      'hov', -- Sara, buses ?
+      'psv', 
+      'bus'
     },
 
     access_tag_blacklist = Set {
@@ -82,7 +81,7 @@ function setup()
       'agricultural',
       'forestry',
       'emergency',
-      --    'psv' --removed
+      -- 'psv', Sara add before
       'customers',
       'private',
       'delivery',
@@ -91,9 +90,8 @@ function setup()
 
     -- tags disallow access to in combination with highway=service
     service_access_tag_blacklist = Set {
-        'private',
-        'delivery',
-        'destination'
+        'private'
+        -- Sara not add line 94
     },
 
     restricted_access_tag_list = Set {
@@ -104,9 +102,9 @@ function setup()
     },
 
     access_tags_hierarchy = Sequence {
-      -- 'bus', --added
-      'psv', --added
-      -- 'motorcar',
+      --'motorcar',
+      'psv', 
+      'bus', -- Sara added
       'motor_vehicle',
       'vehicle',
       'access'
@@ -117,9 +115,9 @@ function setup()
     },
 
     restrictions = Sequence {
-      --    'motorcar',
-      -- 'bus', --added
-      'psv', --added
+      --'motorcar',
+       'psv', 
+      'bus', -- Sara added
       'motor_vehicle',
       'vehicle'
     },
@@ -279,7 +277,6 @@ function setup()
       ["at:rural"] = 100,
       ["at:trunk"] = 100,
       ["be:motorway"] = 120,
-      ["be-vlg:rural"] = 70,
       ["by:urban"] = 60,
       ["by:motorway"] = 110,
       ["ch:rural"] = 80,
@@ -409,10 +406,11 @@ function process_way(profile, way, result, relations)
     -- determine access status by checking our hierarchy of
     -- access tags, e.g: motorcar, motor_vehicle, vehicle
     WayHandlers.bus_access,
-    WayHandlers.handle_bus_oneway,
+    --WayHandlers.access,
 
     -- check whether forward/backward directions are routable
-    -- WayHandlers.oneway,
+    --WayHandlers.oneway,
+    WayHandlers.handle_bus_oneway,
 
     -- check a road's destination
     WayHandlers.destinations,
@@ -461,8 +459,6 @@ function process_way(profile, way, result, relations)
       Relations.process_way_refs(way, relations, result)
   end
 end
-
-
 
 function process_turn(profile, turn)
   -- Use a sigmoid function to return a penalty that maxes out at turn_penalty
