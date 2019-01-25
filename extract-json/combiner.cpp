@@ -39,7 +39,6 @@ void combine_single_response(json single_response, json nodesSensor) {
 						      {"properties", {
 						        {"marker-color", "#ff0000"},
 						        {"marker-size", "large"},
-						        {"marker-symbol", "bus"},
 										{"Text", nodesSensor[j]["name"]}
 						      }},
 						      {"geometry", {

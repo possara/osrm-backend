@@ -30,9 +30,9 @@ int main(int argc, char** argv){
 	int nbCurrentLine = 0;
 
 	std::string url = hostname + "/route/v1/driving/";
-	for (int i = 0; i < stops.size(); i++){
+	for (int i = 0; i < 1; i++){
 
-		for (int j = 0; j < stops[i].size(); j++) {
+		for (int j = 0; j < stops[i].size(); j+=5) {
 			double lon = stops[i][j][0].get<double>();
 			double lat = stops[i][j][1].get<double>();
 			if (nbCurrentLine >= 499) {
