@@ -30,15 +30,18 @@ int main(int argc, char** argv){
     auto features = j_input["features"];
     size_t size = j_input["features"].size();
 
+    // For each sensors
     for (size_t i = 0; i < size; i++){
       double lon = features[i]["geometry"]["coordinates"][0].get<double>();
       double lat = features[i]["geometry"]["coordinates"][1].get<double>();
 
+      // Call the route service from OSRM
       std::string url = localhost + "/nearest/v1/driving/" + std::to_string(lon) + "," + std::to_string(lat) + "?number=1";
       std::string data = curl_call(url);
 
       json j = json::parse(data);
 
+      // Create a JSON object
       auto nodes = j.at("waypoints")[0].at("nodes");
       std::string name = features[i]["properties"]["Text"].get<std::string>();
       auto coordinates = json::array({lon, lat});

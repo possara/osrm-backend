@@ -29,12 +29,15 @@ int main(int argc, char** argv){
 
 	int nbCurrentLine = 0;
 
+	// Creation of the url request
 	std::string url = hostname + "/route/v1/driving/";
 	for (int i = 0; i < 1; i++){
 
+		// j+=5 because too much close points is not a good idea
 		for (int j = 0; j < stops[i].size(); j+=5) {
 			double lon = stops[i][j][0].get<double>();
 			double lat = stops[i][j][1].get<double>();
+			// 500 points is the max limit for route request
 			if (nbCurrentLine >= 499) {
 				url += ";" + std::to_string(lon) + "," + std::to_string(lat) + "?overview=full&steps=true&annotations=true";
 

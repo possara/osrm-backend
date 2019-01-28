@@ -25,11 +25,8 @@ void combine_single_response(json single_response, json nodesSensor) {
 		int k = (i == 0) ? 0 : 2;
 
 		for(; k < nodes.size()-1; k++){
-			// std::cout << "PhantomNodes " << nodes[k] << "-" << nodes[k+1] << "\n";
 
 			for (int j = 0; j < nodesSensor.size(); j++){
-
-				// std::cout << "Capteurs" << nodesSensor[j]["nodes"][0] << " - " << nodesSensor[j]["nodes"][1] << " - " <<  nodes[k] << " - "<<  nodes[k+1] << "\n";
 
 				if (( nodesSensor[j]["nodes"][0] == nodes[k] && nodesSensor[j]["nodes"][1] == nodes[k+1])){
 					std::cout << "Capteurs" << nodesSensor[j]["name"] << "\n";
@@ -51,9 +48,6 @@ void combine_single_response(json single_response, json nodesSensor) {
 				special_nodes_check(nodesSensor[j], nodes[k+1]);
 
 			}
-
-			// node exists in file 1
-			// insert in list
 		}
 	}
 }
@@ -88,5 +82,4 @@ int main(int argc, char** argv){
 	std::ofstream output(argv[3], std::ofstream::out);
 	output << std::setw(4) << geojson_output;
 
-	// return list*/
 }
